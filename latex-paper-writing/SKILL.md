@@ -63,7 +63,7 @@ All shared LaTeX setup lives in one file, `preamble.tex`: packages, the color th
 \usepackage{tikz}
 \usepackage{gradbars}   % compact bars and sparklines in tables and text
 
-% ---- color theme (see Colors) ----
+% ---- color theme (see Theme and Colors) ----
 \definecolor{metablue}{HTML}{0866FF}    % our method
 % ...
 
@@ -143,12 +143,13 @@ All shared LaTeX setup lives in one file, `preamble.tex`: packages, the color th
 
 Do not add it, and do not cite a placeholder key. Tell the user which claim needs a citation and what you searched for.
 
-## Colors
+## Theme and Colors
 
-Use one color theme across the whole paper: a consistent visual encoding in which each color has one fixed meaning.
+The whole paper follows one **color coding**: a single theme in which each color has one fixed meaning, applied everywhere. This covers plots, TikZ diagrams, the method overview figure, table highlights, and colored text. The figures in particular must look consistent: once readers learn that blue means our method, they can recognize it in every figure without checking the legend.
 
 - **Define once.** Define a small palette (4–6 colors) once in `preamble.tex` with `\definecolor`. This is the single source of truth.
 - **Fixed meanings.** Each color has one meaning everywhere, in every matplotlib plot, TikZ diagram, and table highlight. For example, `metablue` always marks our method (its curve, bars, dots, and diagram blocks); never switch it to another color, and never reuse it for anything else.
+- **Restrained, not flashy.** Use few, muted colors. Draw most elements in neutral gray or black, and reserve the strong accent color for what matters, usually our method. Avoid rainbow palettes, saturated color mixes, gradients, and decorative color.
 - **No ad-hoc colors.** Do not use matplotlib's default color cycle or hard-coded hex values. matplotlib reads the palette from `preamble.tex` (see the first cell below), and TikZ uses the names directly (`\draw[metablue]`).
 - **Readable without color.** Pick colors that stay distinguishable for color-blind readers and in grayscale print. Also vary markers or line styles, so meaning never relies on color alone.
 
