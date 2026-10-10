@@ -16,17 +16,19 @@ paper/
 ├── bib/
 │   ├── refs.bib          # entries found by humans
 │   └── ai.bib            # entries added by AI only
-└── figures/
-    ├── figures.ipynb     # all plotting code
-    ├── data/             # plotted values, one file per figure
-    └── <name>-crop.pdf   # cropped figures, included in the paper
+├── figures/
+│   ├── figures.ipynb     # all plotting code
+│   ├── data/             # plotted values, one file per figure
+│   └── <name>-crop.pdf   # cropped figures, included in the paper
+└── reference/            # LaTeX sources of exemplar papers, read-only
 ```
 
-`.gitignore` ignores all PDFs, so the compiled paper is never committed. The only exception is the cropped figures:
+`.gitignore` ignores all PDFs, so the compiled paper is never committed; the only exception is the cropped figures. It also ignores `reference/`, because other authors' sources are not ours to redistribute:
 
 ```gitignore
 *.pdf
 !figures/*-crop.pdf
+reference/
 ```
 
 ## Preamble
@@ -72,7 +74,33 @@ All shared LaTeX setup lives in one file, `preamble.tex`: packages, the color th
 \newcommand{\loss}{\mathcal{L}}         % loss
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\softmax}{softmax}
+\DeclareMathOperator{\diag}{diag}
 ```
+
+## Math Notation
+
+**Rule:** math fonts and symbols must be professional and follow the field's conventions, so readers recognize each kind of object at a glance. When in doubt, follow the conventions in Goodfellow et al., *Deep Learning*, and the ICLR `math_commands.tex`.
+
+| Object | Style | Example |
+|---|---|---|
+| Scalar | italic lowercase (Greek for hyperparameters) | $x$, $\lambda$, $\eta$ |
+| Count, dimension, index range | italic uppercase / lowercase index | $N$, $D$, $L$; $i = 1, \dots, N$ |
+| Vector | bold lowercase | `\mathbf{x}`, `\boldsymbol{\mu}` |
+| Matrix | bold uppercase | `\mathbf{W}` |
+| Tensor (3+ dims) | bold sans-serif uppercase | `\mathsf{\mathbf{X}}` |
+| Set, dataset | calligraphic uppercase | `\mathcal{D}`, `\mathcal{X}` |
+| Loss | calligraphic L | `\mathcal{L}`, `\mathcal{L}_{\text{cls}}` |
+| Number sets, expectation | blackboard bold | `\mathbb{R}^{N \times D}`, `\mathbb{E}` |
+| Function, network | italic, parameters as subscript | $f_\theta$, $g_\phi$ |
+| Named operator | upright, via `\DeclareMathOperator` | `\softmax`, `\argmin`, `\diag` |
+| Transpose, norm | `^\top`, `\lVert \cdot \rVert` | `\mathbf{W}^\top`, `\lVert \mathbf{x} \rVert_2` |
+
+- Word subscripts are upright: write `\mathcal{L}_{\text{cls}}`, not `\mathcal{L}_{cls}`.
+- One symbol, one meaning across the whole paper. Never reuse a symbol for something else in another section.
+- Define every symbol at its first use, and write symbols through the macros in `preamble.tex`.
+
+**Use the symbols throughout the paper.** Once the method defines a symbol, refer to it wherever its value or role comes up, so readers can connect the text to the method. For example, if the method defines the number of layers $L$, the experiments should say: "We use ViT-B with 12 layers ($L = 12$)." Likewise, write "the loss weight $\lambda$ in Eq. (3) is set to 0.1", not just "the loss weight is 0.1".
 
 ## References
 
@@ -226,3 +254,24 @@ First, fit the table by changing its content and spacing, in this order:
 If the table still does not fit after all of these, scale it with `\resizebox{\columnwidth}{!}{...}` (or `\textwidth`), as close to 1 as possible.
 
 Fit figures by drawing them at the right physical size (see Figures), not by scaling.
+
+## Reference Papers
+
+Before and while writing, study a few exemplar papers and follow their structure and writing style.
+
+- **Choose 3–5 papers** in the same field and a similar direction, from top groups (e.g. MIT, Stanford, CMU, Berkeley), preferably recent and published at the target venue.
+- **Download their LaTeX sources from arXiv** into `reference/`, one folder per paper:
+
+  ```bash
+  id=2010.11929
+  mkdir -p reference/$id && curl -sL https://arxiv.org/src/$id | tar -xz -C reference/$id
+  ```
+
+  If `tar` fails, the source is a single gzipped `.tex` file: `curl -sL https://arxiv.org/src/$id | gunzip > reference/$id/main.tex`.
+- **Learn from them:**
+  - section structure and length;
+  - how the introduction builds up to the contributions;
+  - paragraph flow and how claims are supported;
+  - figure and table design, captions, and notation.
+- **Never copy text.** Reference papers are models for structure and style, not sources of sentences. Do not `\input` them or reuse their wording.
+
