@@ -1,6 +1,6 @@
 ---
 name: latex-paper-writing
-description: A standardized workflow for writing academic papers in LaTeX: project layout, references, and figures. AI-added BibTeX entries go only into bib/ai.bib, each annotated with its online source and a summary, never written from memory; figures are plotted in figures/figures.ipynb at the template's exact physical width with LaTeX-rendered text, and their plot data is kept in figures/. Use whenever writing or editing a LaTeX paper, adding citations or .bib entries, or creating figures for a paper.
+description: A standardized workflow for writing academic papers in LaTeX, covering project layout, the shared preamble (packages, color theme, math macros), references, figures, and tables. AI-added BibTeX entries go only into bib/ai.bib, each annotated with its online source and a summary, never written from memory. Figures are plotted in figures/figures.ipynb at the template's exact physical width with LaTeX-rendered text and theme colors, with their plot data kept in figures/. Tables are fitted by editing content and spacing, with resizebox only as a last resort. Use whenever writing or editing a LaTeX paper, adding citations or .bib entries, or creating figures or tables for a paper.
 ---
 
 # LaTeX Paper Writing
