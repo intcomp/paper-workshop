@@ -299,3 +299,61 @@ Before and while writing, study a few exemplar papers and follow their structure
   - figure and table design, captions, and notation.
 - **Never copy text.** Reference papers are models for structure and style, not sources of sentences. Do not `\input` them or reuse their wording.
 
+
+## Submission and Revision
+
+**Tag every milestone.** After each submission, tag the exact submitted version so it can always be recovered and compared against. Git tag names cannot contain spaces, so use hyphens:
+
+```bash
+git tag -a initial-submission -m "Initial submission to <venue>"
+git tag -a revision-1 -m "Revision 1"
+git push origin --tags
+```
+
+**During revision,** highlight every change, and build a marked and a clean PDF from the same source.
+
+1. Define a conditional highlight command in `preamble.tex`:
+
+   ```latex
+   \ifdefined\marked
+     \newcommand{\rev}[1]{{\color{metablue}#1}}
+   \else
+     \newcommand{\rev}[1]{#1}
+   \fi
+   ```
+
+2. Wrap every changed or added piece of text in `\rev{...}`: sentences, table cells, and figure and table captions. For a new or redrawn figure or table, highlight its caption.
+3. Build the marked version, with changes in `metablue`, as `marked.pdf`:
+
+   ```bash
+   latexmk -pdf -shell-escape -jobname=marked -usepretex='\def\marked{}' main.tex
+   ```
+
+   A plain `latexmk -pdf main.tex` builds the clean version, without highlighting.
+4. Before sending the revision, make sure nothing is missed. Compare against the previous tag with `git diff initial-submission -- '*.tex'`, and check that every change is inside `\rev{}`.
+
+## Response
+
+### Structure
+
+Write the response with the [TempLaTeX response template](https://github.com/intcomp/TempLaTeX/blob/main/response.tex).
+
+**Rule:** split each reviewer comment into sub-comments by its logic, quote each one, and answer it directly below the quote.
+
+- **One concern per sub-comment.** Reviewers often combine several questions in one paragraph. Split them into separate sub-comments, numbered by reviewer (e.g. `R1 Comment1`, `R1 Comment2`), so that each one gets its own complete answer.
+- **Quote verbatim.** Put the reviewer's original wording for each sub-comment in a `\cmt{<title>}{<comment>}` box. Do not paraphrase, shorten, or soften it, and never drop any part of the comment.
+- **Answer below the quote.** Put the response to each sub-comment immediately after its box.
+
+### Referring to Figures, Tables, and Equations
+
+**Rule:** every reference to a figure, table, equation, or section in the response must state which document it is in, so reviewers never have to guess.
+
+| Where the item is | How to refer to it |
+|---|---|
+| Only in the response | "As shown in Table 5 of this response, ..." |
+| Only in the revised manuscript | "As shown in Figure 3 of the revised manuscript, ..." |
+| In both | Give both numbers: "As shown in Table 5 of this response (also Table 8 of the revised manuscript), ..." |
+| In the original submission (e.g. quoted by a reviewer) | Map it to the new number: "Table 3 of the original submission (now Table 4 of the revised manuscript)" |
+
+- Never write a bare "Table 5" or "Fig. 3" without naming the document.
+- Numbers shift during revision, so take every number from the final compiled PDFs of both documents, and recheck them after the last build.
