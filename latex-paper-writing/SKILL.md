@@ -343,6 +343,14 @@ Write the response with the [TempLaTeX response template](https://github.com/int
 - **One concern per sub-comment.** Reviewers often combine several questions in one paragraph. Split them into separate sub-comments, numbered by reviewer (e.g. `R1 Comment1`, `R1 Comment2`), so that each one gets its own complete answer.
 - **Quote verbatim.** Put the reviewer's original wording for each sub-comment in a `\cmt{<title>}{<comment>}` box. Do not paraphrase, shorten, or soften it, and never drop any part of the comment.
 - **Answer below the quote.** Put the response to each sub-comment immediately after its box.
+- **State the revision.** If the manuscript was revised because of a sub-comment, end its response with an explicit, highlighted sentence that says where and what changed, referenced by label:
+
+  ```latex
+  \rev{We have revised Section~\ref{M-sec:experiments} of the revised manuscript
+  to add the comparison with X that the reviewer requested.}
+  ```
+
+  Name the exact location (section, table, figure, or equation) and the specific change, matching what the reviewer asked for.
 
 ### Referring to Figures, Tables, and Equations
 
@@ -356,4 +364,15 @@ Write the response with the [TempLaTeX response template](https://github.com/int
 | In the original submission (e.g. quoted by a reviewer) | Map it to the new number: "Table 3 of the original submission (now Table 4 of the revised manuscript)" |
 
 - Never write a bare "Table 5" or "Fig. 3" without naming the document.
-- Numbers shift during revision, so take every number from the final compiled PDFs of both documents, and recheck them after the last build.
+- Numbers shift during revision. Numbers that cannot come from labels, such as those of the original submission, must be taken from its compiled PDF.
+- **Never hard-code manuscript numbers.** Reference the manuscript's tables, figures, and equations from the response through their labels, with `\externaldocument`. The numbers then always match the revised manuscript.
+
+  ```latex
+  \usepackage{xr-hyper}        % in response.tex; use xr if hyperref is not loaded
+  \usepackage{hyperref}
+  \externaldocument[M-]{main}  % reads main.aux; prefix M- avoids label clashes
+  ...
+  As shown in Table~\ref{M-tab:ablation} of the revised manuscript, ...
+  ```
+
+  Compile the manuscript first, because `\externaldocument` reads its `.aux` file. Rebuild the response after every manuscript change.
